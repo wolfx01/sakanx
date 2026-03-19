@@ -67,7 +67,7 @@ export default function Home() {
           </nav>
           <div className="flex items-center gap-4">
             <Link
-              href="#"
+              href="/signin"
               className="hidden sm:block text-sakanx-navy font-semibold hover:text-sakanx-blue transition-colors"
             >
               Sign In
