@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Mail,
   Lock,
@@ -17,11 +18,16 @@ import {
 } from "lucide-react";
 import ScrollReveal from "../components/ScrollReveal";
 import HeroBackground from "../components/HeroBackground";
+import { useAuth } from "../context/AuthContext";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { login } = useAuth();
+
+  const [error, setError] = useState("");
 
   const [form, setForm] = useState({
     fullName: "",
@@ -38,9 +44,57 @@ export default function SignUpPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     setIsLoading(true);
-    // TODO: Implement actual sign-up logic
-    setTimeout(() => setIsLoading(false), 2000);
+
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          full_name: form.fullName,
+          email: form.email,
+          password: form.password,
+          phone: form.phone || undefined,
+          role: form.role,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Something went wrong");
+        setIsLoading(false);
+        return;
+      }
+
+      // Login with real token
+      login(
+        {
+          id: data.user.id,
+          full_name: data.user.full_name,
+          email: data.user.email,
+          role: data.user.role as "student" | "owner",
+        },
+        data.token
+      );
+
+      // Redirect based on role
+      if (form.role === "owner") {
+        router.push("/create-listing");
+      } else {
+        router.push("/");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -149,6 +203,11 @@ export default function SignUpPage() {
           </ScrollReveal>
 
           <ScrollReveal variant="fade-up" delay={100}>
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm font-medium text-center">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Full Name */}
               <div className="space-y-1.5">

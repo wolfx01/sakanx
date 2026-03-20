@@ -2,12 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Search,
-  ChevronDown,
   ShieldCheck,
   BadgeDollarSign,
   Building2,
   ArrowRight,
-  Star,
   Home as HomeIcon,
   MapPin,
   GraduationCap,
@@ -15,75 +13,18 @@ import {
   Instagram,
   Twitter,
   Linkedin,
-  Menu,
 } from "lucide-react";
 import ScrollReveal from "./components/ScrollReveal";
 import CountUp from "./components/CountUp";
 import HeroBackground from "./components/HeroBackground";
+import Navbar from "./components/Navbar";
+import HeroCTA from "./components/HeroCTA";
 
 export default function Home() {
   return (
     <main className="min-h-screen overflow-x-hidden">
       {/* ========== NAVBAR ========== */}
-      <header className="fixed top-0 left-0 right-0 glass z-50 border-b border-white/20">
-        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Link href="/">
-              <Image
-                src="/sakanx-logo.png"
-                alt="SakanX Logo"
-                width={220}
-                height={64}
-                className="w-auto h-14 object-contain"
-                priority
-              />
-            </Link>
-          </div>
-          <nav className="hidden md:flex items-center gap-8 font-semibold text-gray-500">
-            <Link
-              href="#"
-              className="text-sakanx-navy hover:text-sakanx-blue transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              href="#listings"
-              className="hover:text-sakanx-blue transition-colors"
-            >
-              Browse
-            </Link>
-            <Link
-              href="#features"
-              className="hover:text-sakanx-blue transition-colors"
-            >
-              Why Us
-            </Link>
-            <Link
-              href="#how-it-works"
-              className="hover:text-sakanx-blue transition-colors"
-            >
-              How It Works
-            </Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/signin"
-              className="hidden sm:block text-sakanx-navy font-semibold hover:text-sakanx-blue transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="#"
-              className="bg-sakanx-navy text-white px-6 py-2.5 rounded-full font-bold hover:bg-sakanx-blue transition-all duration-300 shadow-lg shadow-sakanx-navy/20 hover:shadow-sakanx-blue/30 hover:scale-105 active:scale-95"
-            >
-              Post a Listing
-            </Link>
-            <button className="md:hidden text-sakanx-navy">
-              <Menu className="w-6 h-6" />
-            </button>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* ========== HERO SECTION ========== */}
       <section className="relative pt-32 pb-24 lg:pt-48 lg:pb-36 overflow-hidden bg-sakanx-light">
@@ -122,53 +63,8 @@ export default function Home() {
             </p>
           </ScrollReveal>
 
-          {/* Search Box */}
-          <ScrollReveal variant="zoom-in" delay={350} duration={800}>
-            <div className="max-w-4xl mx-auto bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-sakanx-navy/5 border border-gray-100 flex flex-col md:flex-row gap-3 animate-pulse-glow">
-              <div className="flex-[1.5] relative">
-                <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-sakanx-navy/40" />
-                <input
-                  type="text"
-                  placeholder="Where are you studying? (e.g. Rabat, Agadir...)"
-                  className="w-full h-14 pl-12 pr-4 rounded-xl bg-sakanx-light border-transparent focus:bg-white focus:border-sakanx-blue focus:ring-2 focus:ring-sakanx-blue/30 transition-all outline-none text-base placeholder-gray-400 font-medium text-sakanx-navy"
-                />
-              </div>
-              <div className="flex-1 relative">
-                <select className="w-full h-14 pl-4 pr-10 rounded-xl bg-sakanx-light border-transparent focus:bg-white focus:border-sakanx-blue focus:ring-2 focus:ring-sakanx-blue/30 transition-all outline-none text-base font-medium text-sakanx-navy appearance-none cursor-pointer">
-                  <option value="">Property Type</option>
-                  <option value="room">Private Room</option>
-                  <option value="studio">Studio</option>
-                  <option value="apartment">Shared Apartment</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
-                  <ChevronDown className="w-5 h-5 text-sakanx-navy/40" />
-                </div>
-              </div>
-              <button className="h-14 md:w-48 bg-sakanx-navy text-white rounded-xl font-bold text-lg hover:bg-sakanx-blue hover:shadow-lg hover:shadow-sakanx-blue/30 transition-all duration-300 active:scale-95 cursor-pointer flex items-center justify-center gap-2">
-                <Search className="w-5 h-5" />
-                Search
-              </button>
-            </div>
-          </ScrollReveal>
-
-          {/* Trending Cities */}
-          <div className="mt-10 flex flex-wrap justify-center items-center gap-3 font-semibold text-gray-500 text-sm">
-            <ScrollReveal variant="fade-right" delay={500}>
-              <span className="font-medium mr-2 text-gray-400">
-                Trending cities:
-              </span>
-            </ScrollReveal>
-            {["Rabat", "Tangier", "Casablanca", "Agadir", "Fes"].map(
-              (city, i) => (
-                <ScrollReveal key={city} variant="fade-up" delay={550 + i * 80}>
-                  <button className="px-5 py-2.5 bg-white text-sakanx-navy rounded-full shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 hover:border-sakanx-blue hover:-translate-y-0.5 flex items-center gap-1.5 cursor-pointer">
-                    <Star className="w-3.5 h-3.5 text-sakanx-gold fill-sakanx-gold" />
-                    {city}
-                  </button>
-                </ScrollReveal>
-              )
-            )}
-          </div>
+          {/* CTA — changes based on auth state */}
+          <HeroCTA />
         </div>
       </section>
 

@@ -3,21 +3,58 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Chrome } from "lucide-react";
 import ScrollReveal from "../components/ScrollReveal";
 import HeroBackground from "../components/HeroBackground";
+import { useAuth } from "../context/AuthContext";
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setIsLoading(true);
-    // TODO: Implement actual sign-in logic
-    setTimeout(() => setIsLoading(false), 2000);
+
+    try {
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Something went wrong");
+        setIsLoading(false);
+        return;
+      }
+
+      // Login with real token
+      login(
+        {
+          id: data.user.id,
+          full_name: data.user.full_name,
+          email: data.user.email,
+          role: data.user.role as "student" | "owner",
+        },
+        data.token
+      );
+
+      // Redirect to home
+      router.push("/");
+    } catch {
+      setError("Network error. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -131,6 +168,11 @@ export default function SignInPage() {
           </ScrollReveal>
 
           <ScrollReveal variant="fade-up" delay={100}>
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm font-medium text-center">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Email */}
               <div className="space-y-1.5">
