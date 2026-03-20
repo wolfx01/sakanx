@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Heart, MapPin, Tag } from "lucide-react";
 import { useState } from "react";
 
@@ -32,7 +33,10 @@ export default function PropertyCard({ listing }: { listing: Residence }) {
   const formattedPrice = new Intl.NumberFormat("en-US").format(listing.price_per_month);
 
   return (
-    <div className="group flex flex-col bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl hover:shadow-sakanx-navy/10 hover:-translate-y-1 transition-all duration-300">
+    <Link 
+      href={`/residence/${listing.id}`}
+      className="group flex flex-col bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl hover:shadow-sakanx-navy/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+    >
       {/* Image Section */}
       <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
         <Image
@@ -94,6 +98,6 @@ export default function PropertyCard({ listing }: { listing: Residence }) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

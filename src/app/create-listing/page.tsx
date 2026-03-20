@@ -15,6 +15,7 @@ import {
   X,
   Upload,
   CheckCircle,
+  Star
 } from "lucide-react";
 import ScrollReveal from "../components/ScrollReveal";
 import Navbar from "../components/Navbar";
@@ -44,9 +45,21 @@ const categories = [
   { value: "house", label: "Full House", icon: "🏡" },
 ];
 
+const availableAmenities = [
+  { name: "Fast Wi-Fi", icon: "📶" },
+  { name: "Air Conditioning", icon: "❄️" },
+  { name: "Heating", icon: "🔥" },
+  { name: "Kitchen Access", icon: "🍳" },
+  { name: "Furnished", icon: "🛋️" },
+  { name: "Washing Machine", icon: "🧺" },
+  { name: "Parking", icon: "🚗" },
+  { name: "Near University", icon: "🎓" },
+];
+
 export default function CreateListingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string[]>([]);
+  const [amenities, setAmenities] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
@@ -63,6 +76,12 @@ export default function CreateListingPage() {
 
   const update = (field: string, value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
+
+  const toggleAmenity = (name: string) => {
+    setAmenities((prev) =>
+      prev.includes(name) ? prev.filter((a) => a !== name) : [...prev, name]
+    );
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -106,6 +125,7 @@ export default function CreateListingPage() {
           address: form.address || undefined,
           price_per_month: parseFloat(form.pricePerMonth),
           category: form.category || undefined,
+          amenities,
           images: imagePreview,
         }),
       });
@@ -294,6 +314,44 @@ export default function CreateListingPage() {
                       className="w-full h-13 px-4 rounded-xl bg-sakanx-light border border-gray-200 focus:border-sakanx-blue focus:ring-2 focus:ring-sakanx-blue/20 transition-all outline-none text-base font-medium text-sakanx-navy placeholder-gray-400"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-gray-100" />
+
+              {/* Section: Amenities */}
+              <div>
+                <h2 className="text-lg font-bold text-sakanx-navy mb-4 flex items-center gap-2">
+                  <Star className="w-5 h-5 text-yellow-500" />
+                  What this place offers
+                </h2>
+                <p className="text-sm text-gray-400 mb-4">
+                  Select all the features and amenities available at your property.
+                </p>
+                
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                  {availableAmenities.map((amenity) => {
+                    const isSelected = amenities.includes(amenity.name);
+                    return (
+                      <button
+                        key={amenity.name}
+                        type="button"
+                        onClick={() => toggleAmenity(amenity.name)}
+                        className={`h-14 px-4 rounded-xl border font-semibold flex items-center gap-3 transition-all duration-200 cursor-pointer text-sm text-left ${
+                          isSelected
+                            ? "border-sakanx-blue bg-sakanx-blue/10 text-sakanx-navy"
+                            : "border-gray-200 bg-sakanx-light text-gray-500 hover:border-gray-300"
+                        }`}
+                      >
+                        <span className="text-xl">{amenity.icon}</span>
+                        <span className="leading-tight">{amenity.name}</span>
+                        {isSelected && (
+                          <CheckCircle className="w-4 h-4 text-sakanx-blue ml-auto shrink-0" />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

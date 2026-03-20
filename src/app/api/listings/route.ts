@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { title, description, city, address, price_per_month, category } =
+    const { title, description, city, address, price_per_month, category, amenities } =
       body;
 
     // Validation
@@ -48,13 +48,14 @@ export async function POST(req: NextRequest) {
     // Create listing
     const residence = await prisma.residence.create({
       data: {
-        owner_id: payload.id as string,
+        owner: { connect: { id: payload.id as string } },
         title,
         description,
         city,
         address,
         price_per_month,
         category,
+        amenities: Array.isArray(amenities) ? amenities : [],
       },
     });
 
