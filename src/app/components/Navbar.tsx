@@ -71,8 +71,8 @@ export default function Navbar() {
 
               {/* User menu */}
               <div className="flex items-center gap-3">
-                <div className="hidden sm:flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-sakanx-blue to-sakanx-navy flex items-center justify-center text-white font-bold text-sm">
+                <Link href="/dashboard" className="hidden sm:flex items-center gap-2 hover:opacity-80 transition-opacity" title="Go to Dashboard">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-sakanx-blue to-sakanx-navy flex items-center justify-center text-white font-bold text-sm shadow-md">
                     {user?.full_name
                       ?.split(" ")
                       .map((n) => n[0])
@@ -80,10 +80,10 @@ export default function Navbar() {
                       .toUpperCase()
                       .slice(0, 2)}
                   </div>
-                  <span className="text-sm font-semibold text-sakanx-navy max-w-[120px] truncate">
+                  <span className="text-sm font-semibold text-sakanx-navy max-w-[120px] truncate hover:text-sakanx-blue transition-colors">
                     {user?.full_name}
                   </span>
-                </div>
+                </Link>
                 <button
                   onClick={logout}
                   className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer p-1"

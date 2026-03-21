@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 interface User {
   id: string;
@@ -16,6 +22,7 @@ interface AuthContextType {
   logout: () => void;
   isOwner: boolean;
   isLoggedIn: boolean;
+  isHydrated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -25,11 +32,13 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => {},
   isOwner: false,
   isLoggedIn: false,
+  isHydrated: false,
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   // Restore session from localStorage on mount
   useEffect(() => {
@@ -44,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem("sakanx_user");
       }
     }
+    setIsHydrated(true);
   }, []);
 
   const login = (userData: User, jwtToken: string) => {
@@ -69,8 +79,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logout,
         isOwner: user?.role === "owner",
         isLoggedIn: !!user,
-      }}
-    >
+        isHydrated,
+      }}>
       {children}
     </AuthContext.Provider>
   );

@@ -15,7 +15,7 @@ import {
   X,
   Upload,
   CheckCircle,
-  Star
+  Star,
 } from "lucide-react";
 import ScrollReveal from "../components/ScrollReveal";
 import Navbar from "../components/Navbar";
@@ -79,7 +79,7 @@ export default function CreateListingPage() {
 
   const toggleAmenity = (name: string) => {
     setAmenities((prev) =>
-      prev.includes(name) ? prev.filter((a) => a !== name) : [...prev, name]
+      prev.includes(name) ? prev.filter((a) => a !== name) : [...prev, name],
     );
   };
 
@@ -185,8 +185,7 @@ export default function CreateListingPage() {
             )}
             <form
               onSubmit={handleSubmit}
-              className="bg-white rounded-3xl shadow-xl shadow-sakanx-navy/5 border border-gray-100 p-8 md:p-10 space-y-8"
-            >
+              className="bg-white rounded-3xl shadow-xl shadow-sakanx-navy/5 border border-gray-100 p-8 md:p-10 space-y-8">
               {/* Section: Basic Info */}
               <div>
                 <h2 className="text-lg font-bold text-sakanx-navy mb-4 flex items-center gap-2">
@@ -199,8 +198,7 @@ export default function CreateListingPage() {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="title"
-                      className="text-sm font-semibold text-sakanx-navy"
-                    >
+                      className="text-sm font-semibold text-sakanx-navy">
                       Listing Title
                     </label>
                     <input
@@ -218,8 +216,7 @@ export default function CreateListingPage() {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="description"
-                      className="text-sm font-semibold text-sakanx-navy"
-                    >
+                      className="text-sm font-semibold text-sakanx-navy">
                       Description
                     </label>
                     <textarea
@@ -248,8 +245,7 @@ export default function CreateListingPage() {
                             form.category === cat.value
                               ? "border-sakanx-blue bg-sakanx-blue/5 text-sakanx-navy shadow-sm"
                               : "border-gray-200 bg-sakanx-light text-gray-500 hover:border-gray-300"
-                          }`}
-                        >
+                          }`}>
                           <span className="text-lg">{cat.icon}</span>
                           {cat.label}
                         </button>
@@ -274,8 +270,7 @@ export default function CreateListingPage() {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="city"
-                      className="text-sm font-semibold text-sakanx-navy"
-                    >
+                      className="text-sm font-semibold text-sakanx-navy">
                       City
                     </label>
                     <select
@@ -283,8 +278,7 @@ export default function CreateListingPage() {
                       value={form.city}
                       onChange={(e) => update("city", e.target.value)}
                       required
-                      className="w-full h-13 px-4 rounded-xl bg-sakanx-light border border-gray-200 focus:border-sakanx-blue focus:ring-2 focus:ring-sakanx-blue/20 transition-all outline-none text-base font-medium text-sakanx-navy appearance-none cursor-pointer"
-                    >
+                      className="w-full h-13 px-4 rounded-xl bg-sakanx-light border border-gray-200 focus:border-sakanx-blue focus:ring-2 focus:ring-sakanx-blue/20 transition-all outline-none text-base font-medium text-sakanx-navy appearance-none cursor-pointer">
                       <option value="">Select a city</option>
                       {cities.map((city) => (
                         <option key={city} value={city}>
@@ -298,8 +292,7 @@ export default function CreateListingPage() {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="address"
-                      className="text-sm font-semibold text-sakanx-navy"
-                    >
+                      className="text-sm font-semibold text-sakanx-navy">
                       Address{" "}
                       <span className="text-gray-400 font-normal">
                         (optional)
@@ -327,9 +320,10 @@ export default function CreateListingPage() {
                   What this place offers
                 </h2>
                 <p className="text-sm text-gray-400 mb-4">
-                  Select all the features and amenities available at your property.
+                  Select all the features and amenities available at your
+                  property.
                 </p>
-                
+
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                   {availableAmenities.map((amenity) => {
                     const isSelected = amenities.includes(amenity.name);
@@ -342,8 +336,7 @@ export default function CreateListingPage() {
                           isSelected
                             ? "border-sakanx-blue bg-sakanx-blue/10 text-sakanx-navy"
                             : "border-gray-200 bg-sakanx-light text-gray-500 hover:border-gray-300"
-                        }`}
-                      >
+                        }`}>
                         <span className="text-xl">{amenity.icon}</span>
                         <span className="leading-tight">{amenity.name}</span>
                         {isSelected && (
@@ -368,8 +361,7 @@ export default function CreateListingPage() {
                 <div className="max-w-sm space-y-1.5">
                   <label
                     htmlFor="price"
-                    className="text-sm font-semibold text-sakanx-navy"
-                  >
+                    className="text-sm font-semibold text-sakanx-navy">
                     Monthly Rent (MAD)
                   </label>
                   <div className="relative">
@@ -428,8 +420,7 @@ export default function CreateListingPage() {
                     {imagePreview.map((src, i) => (
                       <div
                         key={i}
-                        className="relative group rounded-xl overflow-hidden aspect-square"
-                      >
+                        className="relative group rounded-xl overflow-hidden aspect-square">
                         <img
                           src={src}
                           alt={`Preview ${i + 1}`}
@@ -438,8 +429,7 @@ export default function CreateListingPage() {
                         <button
                           type="button"
                           onClick={() => removeImage(i)}
-                          className="absolute top-1.5 right-1.5 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                        >
+                          className="absolute top-1.5 right-1.5 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                           <X className="w-3.5 h-3.5" />
                         </button>
                         {i === 0 && (
@@ -464,8 +454,7 @@ export default function CreateListingPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full sm:w-auto px-10 h-13 bg-sakanx-navy text-white rounded-xl font-bold text-lg hover:bg-sakanx-blue transition-all duration-300 shadow-lg shadow-sakanx-navy/20 hover:shadow-sakanx-blue/30 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
+                  className="w-full sm:w-auto px-10 h-13 bg-sakanx-navy text-white rounded-xl font-bold text-lg hover:bg-sakanx-blue transition-all duration-300 shadow-lg shadow-sakanx-navy/20 hover:shadow-sakanx-blue/30 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
                   {isLoading ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
@@ -484,8 +473,7 @@ export default function CreateListingPage() {
             <p className="text-center mt-6">
               <Link
                 href="/"
-                className="text-sm text-gray-400 hover:text-sakanx-navy transition-colors font-medium"
-              >
+                className="text-sm text-gray-400 hover:text-sakanx-navy transition-colors font-medium">
                 Skip for now → Go to Dashboard
               </Link>
             </p>

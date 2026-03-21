@@ -15,6 +15,7 @@ const categories = [
   { value: "room", label: "Private Room" },
   { value: "studio", label: "Studio" },
   { value: "apartment", label: "Shared Apartment" },
+  { value: "house", label: "Full House" },
 ];
 
 export default function FilterBar({ city, setCity, category, setCategory }: FilterBarProps) {

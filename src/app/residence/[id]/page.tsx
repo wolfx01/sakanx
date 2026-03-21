@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
+import BookingCard from "@/app/components/BookingCard";
 import { 
   MapPin, 
   Tag, 
@@ -188,35 +189,11 @@ export default async function PropertyDetailsPage({
 
           {/* Right Sidebar - Sticky Contact/Booking Card (40%) */}
           <div className="w-full lg:w-[40%] xl:w-[35%] relative">
-            <div className="sticky top-32 bg-white rounded-3xl p-6 shadow-2xl shadow-sakanx-navy/10 border border-gray-100">
-              
-              {/* Header */}
-              <div className="flex items-end justify-between mb-6 pb-6 border-b border-gray-100">
-                <div>
-                  <span className="text-3xl font-extrabold text-sakanx-navy">
-                    {formattedPrice}
-                  </span>
-                  <span className="text-gray-500 font-medium ml-2 uppercase text-sm">MAD / month</span>
-                </div>
-              </div>
-
-              {/* Form / CTA */}
-              <div className="space-y-4">
-                 {/* For the MVP, we just demonstrate the contact intent */}
-                 <button className="w-full h-14 bg-sakanx-navy text-white rounded-xl font-bold text-lg hover:bg-sakanx-blue transition-all duration-300 shadow-lg shadow-sakanx-navy/20 hover:shadow-sakanx-blue/30 active:scale-[0.98]">
-                    Request to Book
-                 </button>
-                 
-                 <button className="w-full h-14 bg-white text-sakanx-navy rounded-xl font-bold border-2 border-gray-200 hover:border-sakanx-blue/30 transition-all duration-300 active:scale-[0.98]">
-                    Message Owner
-                 </button>
-              </div>
-              
-              <div className="mt-6 text-center text-sm font-medium text-gray-400">
-                You won't be charged yet.
-              </div>
-
-            </div>
+             <BookingCard 
+               residenceId={residence.id}
+               price={Number(residence.price_per_month)}
+               ownerId={residence.owner_id as string}
+             />
           </div>
           
         </div>
