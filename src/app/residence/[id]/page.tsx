@@ -40,12 +40,12 @@ export default async function PropertyDetailsPage({
   });
 
   // 2. Handle 404 if not found
-  if (!residence) {
+  if (!residence || !residence.owner) {
     notFound();
   }
 
   // Formatting
-  const formattedPrice = new Intl.NumberFormat("en-US").format(residence.price_per_month);
+  const formattedPrice = new Intl.NumberFormat("en-US").format(Number(residence.price_per_month));
   
   // Images fallback
   const placeholderImages = ["/property-1.png", "/property-2.png", "/property-1.png"];
@@ -100,6 +100,7 @@ export default async function PropertyDetailsPage({
               src={mainImage}
               alt={residence.title}
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 60vw"
               className="object-cover group-hover:scale-105 transition-transform duration-700"
               priority
             />
@@ -113,6 +114,7 @@ export default async function PropertyDetailsPage({
                   src={src}
                   alt={`${residence.title} ${i + 2}`}
                   fill
+                  sizes="(max-width: 768px) 0vw, 25vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
               </div>

@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
-import { Home, MapPin, Search } from "lucide-react";
+import { Home, MapPin, Search, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import BookingChat from "./BookingChat";
 
 type Booking = {
   id: string;
@@ -14,12 +15,16 @@ type Booking = {
     city: string;
     price_per_month: any;
   };
+  _count?: {
+    messages: number;
+  };
 };
 
 export default function StudentDashboard() {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeChatBookingId, setActiveChatBookingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -117,17 +122,42 @@ export default function StudentDashboard() {
                  <span className="text-gray-400 text-sm font-medium text-right uppercase">MAD</span>
               </div>
 
-              {booking.status === "pending" && (
+              <div className="mt-4 flex flex-col gap-2">
                 <button
-                  onClick={() => cancelBooking(booking.id)}
-                  className="mt-4 w-full py-2 bg-white text-rose-500 border border-rose-200 rounded-xl font-bold hover:bg-rose-50 transition-colors"
+                  onClick={() => {
+                    setActiveChatBookingId(booking.id);
+                    if (booking._count) booking._count.messages = 0;
+                  }}
+                  className="relative w-full py-2 flex items-center justify-center gap-2 bg-sakanx-navy text-white rounded-xl font-bold hover:bg-sakanx-blue transition-colors"
                 >
-                  Cancel Request
+                  <MessageCircle className="w-4 h-4" /> Chat With Owner
+                  {booking._count && booking._count.messages > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-white shadow-sm">
+                      {booking._count.messages}
+                    </span>
+                  )}
                 </button>
-              )}
+                {booking.status === "pending" && (
+                  <button
+                    onClick={() => cancelBooking(booking.id)}
+                    className="w-full py-2 bg-white text-rose-500 border border-rose-200 rounded-xl font-bold hover:bg-rose-50 transition-colors"
+                  >
+                    Cancel Request
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
+      )}
+
+      {activeChatBookingId && user && token && (
+        <BookingChat 
+          bookingId={activeChatBookingId} 
+          token={token} 
+          currentUserId={user.id} 
+          onClose={() => setActiveChatBookingId(null)} 
+        />
       )}
     </div>
   );

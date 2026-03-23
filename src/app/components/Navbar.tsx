@@ -2,11 +2,39 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, LogOut, User } from "lucide-react";
+import { Menu, LogOut, User, Bell } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
-  const { user, isOwner, isLoggedIn, logout } = useAuth();
+  const { user, isOwner, isLoggedIn, logout, token } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (!isLoggedIn || !token) {
+      setUnreadCount(0);
+      return;
+    }
+
+    const fetchUnread = async () => {
+      try {
+        const res = await fetch("/api/messages/unread", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setUnreadCount(data.count || 0);
+        }
+      } catch (err) {
+        console.error("Failed to fetch unread count", err);
+      }
+    };
+
+    fetchUnread();
+    const intervalId = setInterval(fetchUnread, 30000); // Check every 30 seconds
+
+    return () => clearInterval(intervalId);
+  }, [isLoggedIn, token]);
 
   return (
     <header className="fixed top-0 left-0 right-0 glass z-50 border-b border-white/20">
@@ -69,8 +97,18 @@ export default function Navbar() {
                 </Link>
               )}
 
+              {/* Notification Bell */}
+              <Link href="/dashboard" className="relative p-2 text-sakanx-navy hover:text-sakanx-blue transition-colors hover:bg-sakanx-light rounded-full" title="Notifications">
+                <Bell className="w-6 h-6" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 bg-rose-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </Link>
+
               {/* User menu */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 ml-2 border-l pl-4 border-gray-200">
                 <Link href="/dashboard" className="hidden sm:flex items-center gap-2 hover:opacity-80 transition-opacity" title="Go to Dashboard">
                   <div className="w-9 h-9 rounded-full bg-gradient-to-br from-sakanx-blue to-sakanx-navy flex items-center justify-center text-white font-bold text-sm shadow-md">
                     {user?.full_name

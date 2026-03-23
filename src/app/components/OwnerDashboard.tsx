@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
-import { CheckCircle, XCircle, Clock, Home, MapPin, Mail, Phone } from "lucide-react";
+import { CheckCircle, XCircle, Clock, Home, MapPin, Mail, Phone, MessageCircle } from "lucide-react";
+import BookingChat from "./BookingChat";
 
 type Booking = {
   id: string;
@@ -19,12 +20,16 @@ type Booking = {
     email: string;
     phone: string | null;
   };
+  _count?: {
+    messages: number;
+  };
 };
 
 export default function OwnerDashboard() {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeChatBookingId, setActiveChatBookingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -132,26 +137,56 @@ export default function OwnerDashboard() {
                 </div>
               </div>
 
-              {booking.status === "pending" && (
-                <div className="flex flex-col gap-3 min-w-[140px]">
-                  <button 
-                    onClick={() => updateStatus(booking.id, "accepted")}
-                    className="flex items-center justify-center gap-2 bg-sakanx-navy text-white px-4 py-3 rounded-xl font-bold hover:bg-sakanx-blue transition-colors"
-                  >
-                    <CheckCircle className="w-5 h-5" /> Accept
-                  </button>
-                  <button 
-                    onClick={() => updateStatus(booking.id, "rejected")}
-                    className="flex items-center justify-center gap-2 bg-white text-rose-500 border-2 border-rose-100 px-4 py-3 rounded-xl font-bold hover:bg-rose-50 transition-colors"
-                  >
-                    <XCircle className="w-5 h-5" /> Reject
-                  </button>
-                </div>
-              )}
+              <div className="flex flex-col gap-3 min-w-[140px]">
+                {booking.status === "pending" && (
+                  <>
+                    <button 
+                      onClick={() => updateStatus(booking.id, "accepted")}
+                      className="flex items-center justify-center gap-2 bg-sakanx-navy text-white px-4 py-3 rounded-xl font-bold hover:bg-sakanx-blue transition-colors"
+                    >
+                      <CheckCircle className="w-5 h-5" /> Accept
+                    </button>
+                    <button 
+                      onClick={() => updateStatus(booking.id, "rejected")}
+                      className="flex items-center justify-center gap-2 bg-white text-rose-500 border-2 border-rose-100 px-4 py-3 rounded-xl font-bold hover:bg-rose-50 transition-colors"
+                    >
+                      <XCircle className="w-5 h-5" /> Reject
+                    </button>
+                  </>
+                )}
+                
+                <button 
+                  onClick={() => {
+                    setActiveChatBookingId(booking.id);
+                    if (booking._count) booking._count.messages = 0;
+                  }}
+                  className={`relative flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold transition-colors ${
+                    booking.status === "pending" 
+                      ? "bg-gray-50 text-gray-700 border-2 border-gray-200 hover:bg-gray-100"
+                      : "bg-sakanx-navy text-white hover:bg-sakanx-blue"
+                  }`}
+                >
+                  <MessageCircle className="w-5 h-5" /> Chat
+                  {booking._count && booking._count.messages > 0 && (
+                    <span className="absolute -top-3 -right-3 bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-white shadow-sm">
+                      {booking._count.messages}
+                    </span>
+                  )}
+                </button>
+              </div>
 
             </div>
           ))}
         </div>
+      )}
+
+      {activeChatBookingId && user && token && (
+        <BookingChat 
+          bookingId={activeChatBookingId} 
+          token={token} 
+          currentUserId={user.id} 
+          onClose={() => setActiveChatBookingId(null)} 
+        />
       )}
     </div>
   );

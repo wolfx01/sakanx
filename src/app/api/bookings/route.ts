@@ -41,13 +41,23 @@ export async function POST(req: Request) {
     }
 
     // 4. Create Booking
+    const bookingContent = message || "I am interested in booking this property.";
     const booking = await prisma.booking.create({
       data: {
         residence_id: residenceId,
         student_id: payload.id as string,
-        message: message || "I am interested in booking this property.",
+        message: bookingContent,
         status: "pending",
+        messages: {
+          create: {
+            sender_id: payload.id as string,
+            content: bookingContent,
+          }
+        }
       },
+      include: {
+        messages: true
+      }
     });
 
     return NextResponse.json(
@@ -107,6 +117,16 @@ export async function GET(req: Request) {
         },
         student: {
           select: { full_name: true, email: true, phone: true }
+        },
+        _count: {
+          select: {
+            messages: {
+              where: {
+                is_read: false,
+                sender_id: { not: payload.id as string }
+              }
+            }
+          }
         }
       },
       orderBy: { created_at: "desc" },
